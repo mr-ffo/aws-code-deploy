@@ -1,0 +1,15 @@
+{
+  "name": "favour-web-project",
+  "version": "1.0.0",
+  "description": "Demo Node.js app for AWS CodeDeploy",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js",
+    "build": "npm install" 
+  },
+  "dependencies": {
+    "express": "^4.18.2" 
+  },
+  "author": "Folarin favour olaoluwapo",
+  "license": "MIT"
+}

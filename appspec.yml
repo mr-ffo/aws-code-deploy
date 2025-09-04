@@ -1,0 +1,18 @@
+version: 0.0
+os: linux # Specifies Linux as the target OS
+files:
+  - source: / # All files in the build artifact
+    destination: /usr/share/nextwork-web-project/ # Where to copy files on EC2
+hooks:
+  BeforeInstall:
+    - location: scripts/install_dependencies.sh # Script to install Node.js and PM2
+      timeout: 300 # Max 5 minutes
+      runas: root # Run as root user
+  ApplicationStart:
+    - location: scripts/start_server.sh # Script to start the app
+      timeout: 300
+      runas: root
+  ApplicationStop:
+    - location: scripts/stop_server.sh # Script to stop the app
+      timeout: 300
+      runas: root
