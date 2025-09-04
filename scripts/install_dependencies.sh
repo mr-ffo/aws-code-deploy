@@ -1,16 +1,22 @@
 #!/bin/bash
-# Update package manager and install Node.js and npm
-if command -v dnf >/dev/null 2>&1; then
-    sudo dnf update -y
-    sudo dnf install -y nodejs npm
-else
-    sudo yum update -y
-    sudo yum install -y nodejs npm
-fi
-# Ensure npm is available and install PM2
-if command -v npm >/dev/null 2>&1; then
-    sudo npm install -g pm2
-else
-    echo "npm not found, exiting"
-    exit 1
-fi
+# Install Apache HTTPD
+sudo yum install -y httpd
+# Install Node.js and npm from NodeSource
+curl -sL https://rpm.nodesource.com/setup_18.x | sudo bash -
+sudo yum install -y nodejs
+# Install PM2
+sudo npm install -g pm2
+# Create Apache reverse proxy configuration
+sudo cat << EOF > /etc/httpd/conf.d/nodeapp.conf
+<VirtualHost *:80>
+  ServerAdmin root@localhost
+  ServerName app.nextwork.com
+  ProxyRequests off
+  ProxyPreserveHost On
+  ProxyPass / http://localhost:3000/
+  ProxyPassReverse / http://localhost:3000/
+</VirtualHost>
+EOF
+# Start and enable Apache
+sudo systemctl start httpd
+sudo systemctl enable httpd
