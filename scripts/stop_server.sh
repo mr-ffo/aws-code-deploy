@@ -1,14 +1,6 @@
 #!/bin/bash
-set -e
-
-# Ensure PATH includes PM2
 export PATH=$PATH:/usr/local/bin
 
-echo "Stopping Apache..."
-isExistApp="$(pgrep httpd)"
-if [[ -n $isExistApp ]]; then
-    sudo systemctl stop httpd.service
-fi
-
-echo "Stopping Node.js app using PM2..."
-pm2 delete index.js || true
+echo "Stopping existing PM2 process..."
+pm2 stop all || echo "No PM2 processes found"
+pm2 delete all || echo "No PM2 processes to delete"
