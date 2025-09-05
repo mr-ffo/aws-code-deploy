@@ -1,17 +1,11 @@
 #!/bin/bash
 set -e
 
-# Load user environment
-source /home/ec2-user/.bash_profile
+export PATH=$PATH:/usr/local/bin
+export NVM_DIR="/home/ec2-user/.nvm"
+[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
 
-echo "Navigating to app directory..."
+echo ">>> Starting application with PM2..."
 cd /home/ec2-user/app
-
-echo "Starting application with PM2..."
-pm2 start app.js --name "node-app"
-
-echo "Saving PM2 process list..."
+pm2 start app.js --name "node-app" --update-env
 pm2 save
-
-echo "Setting up PM2 to start on reboot..."
-pm2 startup systemd -u ec2-user --hp /home/ec2-user
