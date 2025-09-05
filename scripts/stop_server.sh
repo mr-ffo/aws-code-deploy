@@ -1,6 +1,10 @@
 #!/bin/bash
 export PATH=$PATH:/usr/local/bin
+echo "Stopping application with PM2..."
 
-echo "Stopping existing PM2 process..."
-pm2 stop all || echo "No PM2 processes found"
-pm2 delete all || echo "No PM2 processes to delete"
+if command -v pm2 >/dev/null 2>&1; then
+  pm2 stop all || true
+  pm2 delete all || true
+else
+  echo "PM2 not found, skipping stop process."
+fi

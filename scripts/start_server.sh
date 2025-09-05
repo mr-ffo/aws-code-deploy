@@ -1,8 +1,8 @@
 #!/bin/bash
-# Navigate to app directory
-cd /usr/share/nextwork-web-project
-# Install dependencies (ensure CodeArtifact)
-npm install
-# Start Node.js app with PM2
-pm2 start index.js --name nextwork-app
+export PATH=$PATH:/usr/local/bin
+echo "Starting application with PM2..."
+
+cd /home/ec2-user/aws-code-deploy || exit
+pm2 start server.js --name "favour-app"
 pm2 save
+pm2 startup

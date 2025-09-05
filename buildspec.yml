@@ -1,14 +1,25 @@
 version: 0.2
+
 phases:
   install:
+    runtime-versions:
+      nodejs: 18
     commands:
-      - npm install # Installs dependencies listed in package.json
+      - echo "Installing dependencies..."
+      - npm install
+
   build:
     commands:
-      - npm run build # Runs the build script from package.json
+      - echo "Building the application..."
+      - npm run build || echo "No build script, skipping."
+
 artifacts:
   files:
-    - '**/*' # Includes all project files
-    - appspec.yml # CodeDeploy configuration
-    - scripts/**/* # Deployment scripts
-  discard-paths: no # Preserves folder structure in ZIP
+    - '**/*'
+    - appspec.yml
+    - scripts/**/*
+  discard-paths: no
+
+cache:
+  paths:
+    - node_modules/**/*  
