@@ -1,18 +1,31 @@
 #!/bin/bash
-export PATH=$PATH:/usr/local/bin
-
-echo "Installing Node.js, npm, and PM2..."
-
-# Update packages
-yum update -y
-
-# Install Node.js 18 (Amazon Linux 2)
-curl -fsSL https://rpm.nodesource.com/setup_18.x | bash -
-yum install -y nodejs
-
-# Install PM2 globally
-npm install -g pm2
-
-# Navigate to app directory and install dependencies
-cd /home/ec2-user/aws-code-deploy || exit
-npm install
+# Install Apache HTTPD
+sudo yum install -y httpd
+# Install Node.js and npm from NodeSource
+curl -sL https://rpm.nodesource.com/setup_18.x | sudo bash -
+sudo yum install -y nodejs
+# Set PATH for npm and pm2
+export PATH=$PATH:/usr/local/bin:/usr/bin:/usr/local/lib/node_modules/pm2/bin
+echo "PATH is: $PATH"
+# Install PM2 globally and verify
+sudo npm install -g pm2
+if command -v pm2 >/dev/null 2>&1; then
+    echo "PM2 installed successfully at $(which pm2)"
+else
+    echo "PM2 installation failed, exiting"
+    exit 1
+fi
+# Create Apache reverse proxy configuration
+sudo cat << EOF > /etc/httpd/conf.d/nodeapp.conf
+<VirtualHost *:80>
+  ServerAdmin root@localhost
+  ServerName app.nextwork.com
+  ProxyRequests off
+  ProxyPreserveHost On
+  ProxyPass / http://localhost:3000/
+  ProxyPassReverse / http://localhost:3000/
+</VirtualHost>
+EOF
+# Start and enable Apache
+sudo systemctl start httpd
+sudo systemctl enable httpd
