@@ -1,4 +1,14 @@
 #!/bin/bash
-export PATH=$PATH:/usr/local/bin:/usr/bin
-pm2 stop nextwork-app || true
-pm2 delete nextwork-app || true
+set -e
+
+# Ensure PATH includes PM2
+export PATH=$PATH:/usr/local/bin
+
+echo "Stopping Apache..."
+isExistApp="$(pgrep httpd)"
+if [[ -n $isExistApp ]]; then
+    sudo systemctl stop httpd.service
+fi
+
+echo "Stopping Node.js app using PM2..."
+pm2 delete index.js || true
