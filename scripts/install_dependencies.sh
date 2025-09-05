@@ -4,8 +4,14 @@ sudo yum install -y httpd
 # Install Node.js and npm from NodeSource
 curl -sL https://rpm.nodesource.com/setup_18.x | sudo bash -
 sudo yum install -y nodejs
-# Install PM2
+# Install PM2 globally and verify
 sudo npm install -g pm2
+if command -v pm2 >/dev/null 2>&1; then
+    echo "PM2 installed successfully"
+else
+    echo "PM2 installation failed, exiting"
+    exit 1
+fi
 # Create Apache reverse proxy configuration
 sudo cat << EOF > /etc/httpd/conf.d/nodeapp.conf
 <VirtualHost *:80>

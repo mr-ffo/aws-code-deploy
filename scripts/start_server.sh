@@ -1,5 +1,8 @@
 #!/bin/bash
-# Start the Node.js app with PM2, naming it 'nextwork-app'
-pm2 start /usr/share/nextwork-web-project/index.js --name nextwork-app
-# Save PM2 configuration to auto-restart on reboot
+# Navigate to app directory
+cd /usr/share/nextwork-web-project
+# Install dependencies (ensure CodeArtifact)
+npm install
+# Start Node.js app with PM2
+pm2 start index.js --name nextwork-app
 pm2 save
