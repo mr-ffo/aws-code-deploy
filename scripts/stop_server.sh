@@ -1,4 +1,4 @@
 #!/bin/bash
-# Stop and delete the 'nextwork-app' process if it exists
-pm2 stop nextwork-app
-pm2 delete nextwork-app
+export PATH=$PATH:/usr/local/bin
+pm2 stop nextwork-app || true
+pm2 delete nextwork-app || true
